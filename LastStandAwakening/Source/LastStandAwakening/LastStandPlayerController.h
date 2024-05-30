@@ -14,4 +14,8 @@ class LASTSTANDAWAKENING_API ALastStandPlayerController : public APlayerControll
 {
 	GENERATED_BODY()
 	
+public:
+
+	virtual void GameHasEnded(class AActor* EndGameFocus = nullptr, bool bIsWinner = false) override;
+
 };

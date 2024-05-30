@@ -8,5 +8,9 @@
 
 void ALastStandGameMode::PawnDied(APawn* DeadPawn)
 {
-    
+    APlayerController* PlayerController = Cast<APlayerController>(DeadPawn->GetController());
+    if (PlayerController)
+    {
+        PlayerController->GameHasEnded(nullptr, false);
+    }
 }

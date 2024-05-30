@@ -15,7 +15,7 @@ AProtagonist::AProtagonist()
 void AProtagonist::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -32,3 +32,14 @@ void AProtagonist::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 }
 
+float AProtagonist::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, 
+		AController *EventInstigator, AActor *DamageCauser)
+{
+	float DamageToApply = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	//DamageToApply = FMath::Min(DamageToApply, Health);
+	//Health -= DamageToApply;
+	//UE_LOG(LogTemp, Display, TEXT("Damage Taken: %f, New Health: %f"), DamageToApply, Health);
+
+    //return Health;
+	return 0.f;
+}
