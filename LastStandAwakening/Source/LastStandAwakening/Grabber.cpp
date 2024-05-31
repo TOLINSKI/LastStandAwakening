@@ -33,7 +33,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
 	if (PhysicsHandle && PhysicsHandle -> GetGrabbedComponent())
 	{
-		FVector TargetLocation = GetComponentLocation() + GetForwardVector() * HoldDistance;
+		FVector TargetLocation = GetComponentLocation() + GetForwardVector() * MaxGrabDistance; // Changed HoldDistance -> MaxGrabDistance
 		PhysicsHandle -> SetTargetLocationAndRotation(TargetLocation, GetComponentRotation());
 	}	
 
@@ -92,13 +92,11 @@ void UGrabber::Grab()
 	bool IsHit = GetGrabbableInReach(HitResult);
 	if (IsHit)
 	{
+		
 		// Grabbing using PhysicsHandle when ChannelSweep makess a hit:
 		// ============================================================
 		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
-		if (HitComponent->ComponentHasTag(TEXT("Ignore")))
-		{
-			return;
-		}
+		UE_LOG(LogTemp, Display, TEXT("Name: %s"), *HitResult.GetActor()->GetName());
 		HitComponent -> WakeAllRigidBodies(); // The physics engine needs wake up when interacted with
 		HitComponent -> SetSimulatePhysics(true);
 		AActor * HitActor = HitResult.GetActor();
@@ -119,13 +117,16 @@ void UGrabber::Grab()
 		// -------------------------------------------------------------------------------------
 		// Drawing Debug Sphere:
 		// =====================
-		// DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10, 10, FColor::Green, false, 5);
-		// DrawDebugSphere(GetWorld(), HitResult.Location, 10, 10, FColor::Blue, false, 5);
+		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10, 10, FColor::Green, false, 5);
+		DrawDebugSphere(GetWorld(), HitResult.Location, 10, 10, FColor::Blue, false, 5);
+		
 	}
 	else
 	{
 		UE_LOG(LogTemp, Display, TEXT("Not Hitting Anything with Grabber component"));
-		// DrawDebugSphere(GetWorld(), End, 10, 10, FColor::Red, false, 5);
+		FVector Start = GetComponentLocation();
+		FVector End = Start + GetForwardVector() * MaxGrabDistance;
+		DrawDebugSphere(GetWorld(), End, 10, 10, FColor::Red, false, 5);
 	}
 }
 
@@ -134,13 +135,10 @@ void UGrabber::Release()
 	UPhysicsHandleComponent * PhysicsHandle  = GetPhysicsHandle();
 	if (PhysicsHandle && PhysicsHandle -> GetGrabbedComponent())
 	{
-		if (!PhysicsHandle->GetGrabbedComponent()->ComponentHasTag(TEXT("Ignore")))
-		{
-			AActor* GrabbedActor = PhysicsHandle -> GetGrabbedComponent() -> GetOwner();
-			GrabbedActor -> Tags.Remove("Grabbed");
-			PhysicsHandle -> GetGrabbedComponent() -> WakeAllRigidBodies();
-			PhysicsHandle -> ReleaseComponent();
-		}
+		AActor* GrabbedActor = PhysicsHandle -> GetGrabbedComponent() -> GetOwner();
+		GrabbedActor -> Tags.Remove("Grabbed");
+		PhysicsHandle -> GetGrabbedComponent() -> WakeAllRigidBodies();
+		PhysicsHandle -> ReleaseComponent();
 	}
 }
 
@@ -157,7 +155,7 @@ bool UGrabber::GetGrabbableInReach(FHitResult& OutHitResult) const
 				Start,
 				End,
 				FQuat::Identity,
-				ECC_GameTraceChannel2,
+				ECC_GameTraceChannel1,
 				Sphere
 				);
 }
