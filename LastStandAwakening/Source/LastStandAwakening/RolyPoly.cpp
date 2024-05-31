@@ -2,6 +2,7 @@
 
 
 #include "RolyPoly.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ARolyPoly::ARolyPoly()
@@ -23,5 +24,50 @@ void ARolyPoly::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!FinishStandUp && ShouldStandUp)
+	{
+		StandUp();
+	}
+
+}
+
+void ARolyPoly::StandUp()
+{
+	float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+	FRotator ActorRotation = GetActorRotation();
+
+	if (!ActorRotation.Equals(StandRotation, 1))
+	// {
+	// 	SetActorRotation(StandRotation);
+	// }
+	{
+		SetActorRotation(FMath::RInterpTo(
+			ActorRotation, 
+			StandRotation,
+			DeltaTime,
+			RInterpSpeed));
+	}
+	// else if (!ActorRotation.Equals(FRotator(0, 0, 180), 1))
+	// {
+	// 	SetActorRotation(FMath::RInterpTo(
+	// 		ActorRotation, 
+	// 		FRotator(0, 0, 90),
+	// 		DeltaTime,
+	// 		RInterpSpeed));
+	// }
+
+	if (FVector::Dist(GetActorLocation(), StandLocation) > 1)
+	{
+		SetActorLocation(FMath::VInterpTo(
+			GetActorLocation(), 
+			StandLocation,
+			DeltaTime,
+			VInterpSpeed));
+	}
+}
+
+void ARolyPoly::SetShouldStandUp(bool value)
+{
+	ShouldStandUp = value;
 }
 
