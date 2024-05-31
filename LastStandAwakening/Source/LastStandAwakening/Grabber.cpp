@@ -11,7 +11,7 @@ UGrabber::UGrabber()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	
+
 	// ...
 }
 
@@ -95,6 +95,10 @@ void UGrabber::Grab()
 		// Grabbing using PhysicsHandle when ChannelSweep makess a hit:
 		// ============================================================
 		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
+		if (HitComponent->ComponentHasTag(TEXT("Ignore")))
+		{
+			return;
+		}
 		HitComponent -> WakeAllRigidBodies(); // The physics engine needs wake up when interacted with
 		HitComponent -> SetSimulatePhysics(true);
 		AActor * HitActor = HitResult.GetActor();
@@ -130,12 +134,14 @@ void UGrabber::Release()
 	UPhysicsHandleComponent * PhysicsHandle  = GetPhysicsHandle();
 	if (PhysicsHandle && PhysicsHandle -> GetGrabbedComponent())
 	{
-		AActor* GrabbedActor = PhysicsHandle -> GetGrabbedComponent() -> GetOwner();
-		GrabbedActor -> Tags.Remove("Grabbed");
-		PhysicsHandle -> GetGrabbedComponent() -> WakeAllRigidBodies();
-		PhysicsHandle -> ReleaseComponent();
+		if (!PhysicsHandle->GetGrabbedComponent()->ComponentHasTag(TEXT("Ignore")))
+		{
+			AActor* GrabbedActor = PhysicsHandle -> GetGrabbedComponent() -> GetOwner();
+			GrabbedActor -> Tags.Remove("Grabbed");
+			PhysicsHandle -> GetGrabbedComponent() -> WakeAllRigidBodies();
+			PhysicsHandle -> ReleaseComponent();
+		}
 	}
-	
 }
 
 bool UGrabber::GetGrabbableInReach(FHitResult& OutHitResult) const
