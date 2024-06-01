@@ -45,6 +45,7 @@ void UHealthComponent::DamageTaken(AActor *DamagedActor, float Damage, const UDa
 
 }
 
+// Called From Owner Blueprint:
 void UHealthComponent::FellToDeath()
 {
 	APawn* Pawn = Cast<APawn>(GetOwner());

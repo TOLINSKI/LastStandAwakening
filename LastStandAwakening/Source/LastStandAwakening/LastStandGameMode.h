@@ -18,4 +18,6 @@ public:
 
 	void PawnDied(APawn* DeadPawn);
 
+	void GameWon();
+
 };

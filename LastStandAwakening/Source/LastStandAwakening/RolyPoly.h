@@ -19,6 +19,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowGameWonWidget();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -38,5 +41,5 @@ private:
 
 	bool ShouldStandUp = false;
 	bool FinishStandUp = false;
-
+	
 };

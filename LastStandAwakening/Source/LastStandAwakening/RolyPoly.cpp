@@ -3,6 +3,7 @@
 
 #include "RolyPoly.h"
 #include "Kismet/GameplayStatics.h"
+#include "LastStandGameMode.h"
 
 // Sets default values
 ARolyPoly::ARolyPoly()
@@ -16,7 +17,8 @@ ARolyPoly::ARolyPoly()
 void ARolyPoly::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	ShouldStandUp = false;
 }
 
 // Called every frame
@@ -24,7 +26,7 @@ void ARolyPoly::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!FinishStandUp && ShouldStandUp)
+	if (ShouldStandUp)
 	{
 		StandUp();
 	}
@@ -37,9 +39,6 @@ void ARolyPoly::StandUp()
 	FRotator ActorRotation = GetActorRotation();
 
 	if (!ActorRotation.Equals(StandRotation, 1))
-	// {
-	// 	SetActorRotation(StandRotation);
-	// }
 	{
 		SetActorRotation(FMath::RInterpTo(
 			ActorRotation, 
@@ -47,14 +46,16 @@ void ARolyPoly::StandUp()
 			DeltaTime,
 			RInterpSpeed));
 	}
-	// else if (!ActorRotation.Equals(FRotator(0, 0, 180), 1))
-	// {
-	// 	SetActorRotation(FMath::RInterpTo(
-	// 		ActorRotation, 
-	// 		FRotator(0, 0, 90),
-	// 		DeltaTime,
-	// 		RInterpSpeed));
-	// }
+	else
+	{
+		ShouldStandUp = false;	
+		ALastStandGameMode* GameMode = GetWorld()->GetAuthGameMode<ALastStandGameMode>();
+		if (GameMode)
+		{
+			GameMode->GameWon();
+		}
+		ShowGameWonWidget();
+	}
 
 	if (FVector::Dist(GetActorLocation(), StandLocation) > 1)
 	{
@@ -70,4 +71,19 @@ void ARolyPoly::SetShouldStandUp(bool value)
 {
 	ShouldStandUp = value;
 }
+
+// void ARolyPoly::ShowGameWonWidget()
+// {
+// 	TSubclassOf<UGameWonWidget> GameWonWidgetClass;	
+// 	UGameWonWidget* GameWonTextWidget;
+
+// 	if(GameWonWidgetClass)
+// 	{
+// 		if(!GameWonTextWidget)
+// 		{
+// 			GameWonTextWidget = Cast<UGameWonWidget>(CreateWidget(this, GameWonWidgetClass));
+// 			UE_LOG(LogTemp, Display, TEXT("Widget Created!"));
+// 		}
+// 	}	
+// }
 

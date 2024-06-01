@@ -2,19 +2,26 @@
 
 
 #include "LastStandPlayerController.h"
+#include "TimerManager.h"
+
+void ALastStandPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+    
+}
 
 void ALastStandPlayerController::GameHasEnded(AActor * EndGameFocus, bool bIsWinner)
 {
     // Remeber To Use Super!!!!
-    Super::GameHasEnded(EndGameFocus, bIsWinner);
-    UE_LOG(LogTemp, Warning, TEXT("Should Die"));
+    //Super::GameHasEnded(EndGameFocus, false); // false should be bIsWinner
+    UE_LOG(LogTemp, Warning, TEXT("GAME HAS ENDED!"));
     if(bIsWinner)
     {
-
+        GetWorldTimerManager().SetTimer(RestartTimer, this,&ALastStandPlayerController::RestartLevel, WinGameDelay);
     }
     else
     {
         // GetPawn()->DisableInput(this);
-        RestartLevel();
+        GetWorldTimerManager().SetTimer(RestartTimer, this,&ALastStandPlayerController::RestartLevel, LooseGameDelay);
     }
 }
