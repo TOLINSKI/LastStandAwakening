@@ -25,7 +25,7 @@ private:
 	float WinGameDelay = 5.f;
 
 	UPROPERTY(EditAnywhere)
-	float LooseGameDelay = 0.1;
+	float LooseGameDelay = 6.1;
 
 	FTimerHandle RestartTimer;
 
