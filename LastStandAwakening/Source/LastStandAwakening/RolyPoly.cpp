@@ -71,19 +71,3 @@ void ARolyPoly::SetShouldStandUp(bool value)
 {
 	ShouldStandUp = value;
 }
-
-// void ARolyPoly::ShowGameWonWidget()
-// {
-// 	TSubclassOf<UGameWonWidget> GameWonWidgetClass;	
-// 	UGameWonWidget* GameWonTextWidget;
-
-// 	if(GameWonWidgetClass)
-// 	{
-// 		if(!GameWonTextWidget)
-// 		{
-// 			GameWonTextWidget = Cast<UGameWonWidget>(CreateWidget(this, GameWonWidgetClass));
-// 			UE_LOG(LogTemp, Display, TEXT("Widget Created!"));
-// 		}
-// 	}	
-// }
-

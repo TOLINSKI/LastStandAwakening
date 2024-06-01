@@ -3,6 +3,9 @@
 
 #include "LastStandPlayerController.h"
 #include "TimerManager.h"
+#include "LastStandGameMode.h"
+#include "Kismet/GameplayStatics.h"
+#include "Protagonist.h"
 
 void ALastStandPlayerController::BeginPlay()
 {
@@ -14,7 +17,6 @@ void ALastStandPlayerController::GameHasEnded(AActor * EndGameFocus, bool bIsWin
 {
     // Remeber To Use Super!!!!
     //Super::GameHasEnded(EndGameFocus, false); // false should be bIsWinner
-    UE_LOG(LogTemp, Warning, TEXT("GAME HAS ENDED!"));
     if(bIsWinner)
     {
         GetWorldTimerManager().SetTimer(RestartTimer, this,&ALastStandPlayerController::RestartLevel, WinGameDelay);
@@ -22,6 +24,9 @@ void ALastStandPlayerController::GameHasEnded(AActor * EndGameFocus, bool bIsWin
     else
     {
         // GetPawn()->DisableInput(this);
-        GetWorldTimerManager().SetTimer(RestartTimer, this,&ALastStandPlayerController::RestartLevel, LooseGameDelay);
+        // GetWorldTimerManager().SetTimer(RestartTimer, this,&ALastStandPlayerController::RestartLevel, LooseGameDelay);
+        //---------------------------------------------------------------------------------
+        GetPawn()->Destroy();
+
     }
 }
