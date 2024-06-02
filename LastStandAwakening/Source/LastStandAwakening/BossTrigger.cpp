@@ -36,6 +36,7 @@ void UBossTrigger::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
         {
             ARolyPoly* Boss = Cast<ARolyPoly>(GetOwner());
             Boss->SetShouldStandUp(true);
+            Boss->PlayStandUpSound();
             BossIsFree = true;
         }
     }

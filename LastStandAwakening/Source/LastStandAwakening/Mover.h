@@ -43,9 +43,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool IsTriggered = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool IsMooving;
+
 	void MoveToTarget();
 
-
+	
 
 
 };

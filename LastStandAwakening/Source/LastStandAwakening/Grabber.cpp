@@ -92,7 +92,6 @@ void UGrabber::Grab()
 	bool IsHit = GetGrabbableInReach(HitResult);
 	if (IsHit)
 	{
-		
 		// Grabbing using PhysicsHandle when ChannelSweep makess a hit:
 		// ============================================================
 		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
@@ -117,8 +116,8 @@ void UGrabber::Grab()
 		// -------------------------------------------------------------------------------------
 		// Drawing Debug Sphere:
 		// =====================
-		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10, 10, FColor::Green, false, 5);
-		DrawDebugSphere(GetWorld(), HitResult.Location, 10, 10, FColor::Blue, false, 5);
+		//DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10, 10, FColor::Green, false, 5);
+		//DrawDebugSphere(GetWorld(), HitResult.Location, 10, 10, FColor::Blue, false, 5);
 		
 	}
 	else

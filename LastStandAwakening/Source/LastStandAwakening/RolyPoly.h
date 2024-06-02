@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Reset();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayStandUpSound();
+
 private:
 
 	FVector StartLocation;

@@ -55,10 +55,12 @@ void UMover::MoveToTarget()
 	 	UKismetMathLibrary::VInterpTo(
 	 		GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation() + Velocity, 
 	 		UGameplayStatics::GetWorldDeltaSeconds(this), 0.5);
+		IsMooving = true;
 	}
 	else
 	{
 		GetOwner()->SetActorLocation(GoToLocation);
+		IsMooving = false;
 	}
 }
 

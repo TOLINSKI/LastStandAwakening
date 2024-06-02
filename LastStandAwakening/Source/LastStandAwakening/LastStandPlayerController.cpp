@@ -26,6 +26,7 @@ void ALastStandPlayerController::GameHasEnded(AActor * EndGameFocus, bool bIsWin
         // GetPawn()->DisableInput(this);
         // GetWorldTimerManager().SetTimer(RestartTimer, this,&ALastStandPlayerController::RestartLevel, LooseGameDelay);
         //---------------------------------------------------------------------------------
+        Cast<AProtagonist>(GetPawn())->PlayDeathSound();
         GetPawn()->Destroy();
 
     }
