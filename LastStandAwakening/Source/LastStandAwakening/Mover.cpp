@@ -23,6 +23,7 @@ void UMover::BeginPlay()
 
 	// ...
 	StartLocation = GetOwner()->GetActorLocation();
+	IsTriggered = false;
 }
 
 
@@ -59,4 +60,10 @@ void UMover::MoveToTarget()
 	{
 		GetOwner()->SetActorLocation(GoToLocation);
 	}
+}
+
+void UMover::Reset()
+{
+	GetOwner()->SetActorLocation(StartLocation);
+	IsTriggered = false;
 }

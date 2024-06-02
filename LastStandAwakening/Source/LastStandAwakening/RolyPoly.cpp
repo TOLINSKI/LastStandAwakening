@@ -4,6 +4,7 @@
 #include "RolyPoly.h"
 #include "Kismet/GameplayStatics.h"
 #include "LastStandGameMode.h"
+#include "BossTrigger.h"
 
 // Sets default values
 ARolyPoly::ARolyPoly()
@@ -18,6 +19,8 @@ void ARolyPoly::BeginPlay()
 {
 	Super::BeginPlay();
 
+	StartLocation = GetActorLocation();
+	StartRotation = GetActorRotation();
 	ShouldStandUp = false;
 }
 
@@ -67,7 +70,17 @@ void ARolyPoly::StandUp()
 	}
 }
 
+// Initiated By BossTrigger.cpp
 void ARolyPoly::SetShouldStandUp(bool value)
 {
 	ShouldStandUp = value;
+}
+
+void ARolyPoly::Reset()
+{
+	ShouldStandUp = false;
+	SetActorLocation(StartLocation, false, nullptr, ETeleportType::TeleportPhysics);
+	SetActorRotation(StartRotation,ETeleportType::TeleportPhysics);
+	UBossTrigger* Trigger = Cast<UBossTrigger>(GetComponentByClass(UBoxComponent::StaticClass()));
+	Trigger->Reset();
 }

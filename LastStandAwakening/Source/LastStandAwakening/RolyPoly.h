@@ -30,8 +30,13 @@ public:
 
 	void SetShouldStandUp(bool value);
 
+	UFUNCTION(BlueprintCallable)
+	void Reset();
 
 private:
+
+	FVector StartLocation;
+	FRotator StartRotation;    
 
 	FVector StandLocation = FVector(12146, 3098, 127);
 	FRotator StandRotation = FRotator(0 ,180 , 0);
@@ -41,5 +46,6 @@ private:
 
 	bool ShouldStandUp = false;
 	bool FinishStandUp = false;
+
 	
 };

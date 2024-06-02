@@ -28,14 +28,18 @@ void UBossTrigger::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-    TArray<AActor*> Actors;
-	GetOverlappingActors(Actors);
-    if (!BossIsFree && BlockLifted(Actors))
+    if (!BossIsFree)
     {
-        ARolyPoly* Boss = Cast<ARolyPoly>(GetOwner());
-        Boss->SetShouldStandUp(true);
-        BossIsFree = true;
+        TArray<AActor*> Actors;
+	    GetOverlappingActors(Actors);
+        if (BlockLifted(Actors))
+        {
+            ARolyPoly* Boss = Cast<ARolyPoly>(GetOwner());
+            Boss->SetShouldStandUp(true);
+            BossIsFree = true;
+        }
     }
+    
 }
 
 bool UBossTrigger::BlockLifted(TArray<AActor*> Actors)
@@ -48,4 +52,9 @@ bool UBossTrigger::BlockLifted(TArray<AActor*> Actors)
         }
     }
     return true;
+}
+
+void UBossTrigger::Reset()
+{
+    BossIsFree = false;
 }

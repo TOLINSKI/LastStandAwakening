@@ -24,6 +24,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable)
+	void Reset();
+	
 private:
 	UPROPERTY(EditAnywhere)
 	FVector TargetLocation;
@@ -41,6 +44,8 @@ private:
 	bool IsTriggered = false;
 
 	void MoveToTarget();
+
+
 
 
 };
