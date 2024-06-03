@@ -20,6 +20,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowGameWonWidget();
+
 private:
 	UPROPERTY(EditAnywhere)
 	float WinGameDelay = 5.f;
