@@ -52,11 +52,11 @@ void ARolyPoly::StandUp()
 	else
 	{
 		ShouldStandUp = false;	
-		ALastStandGameMode* GameMode = GetWorld()->GetAuthGameMode<ALastStandGameMode>();
-		if (GameMode)
-		{
-			GameMode->GameWon();
-		}
+		// ALastStandGameMode* GameMode = GetWorld()->GetAuthGameMode<ALastStandGameMode>();
+		// if (GameMode)
+		// {
+		// 	GameMode->GameWon();
+		// }
 		ShowGameWonWidget();
 	}
 

@@ -19,7 +19,8 @@ void ALastStandPlayerController::GameHasEnded(AActor * EndGameFocus, bool bIsWin
     // Super::GameHasEnded(EndGameFocus, bIsWinner); // false should be bIsWinner
     if(bIsWinner)
     {
-        GetWorldTimerManager().SetTimer(RestartTimer, this,&ALastStandPlayerController::ShowWidget, WinGameDelay);
+        // GetWorldTimerManager().SetTimer(RestartTimer, this,&ALastStandPlayerController::ShowWidget, WinGameDelay);
+        ShowWidget();
     }
     else
     {

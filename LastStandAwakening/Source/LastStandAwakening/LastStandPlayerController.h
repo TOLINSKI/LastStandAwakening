@@ -25,7 +25,7 @@ protected:
 
 private:
 	UPROPERTY(EditAnywhere)
-	float WinGameDelay = 19.f;
+	float WinGameDelay = 0.2;
 
 	UPROPERTY(EditAnywhere)
 	float LooseGameDelay = 6.1;
