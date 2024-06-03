@@ -25,7 +25,7 @@ void ALastStandGameMode::GameWon()
         APlayerController* PlayerController = Cast<APlayerController>(Player->GetController());
         if (PlayerController)
         {
-            PlayerController->GameHasEnded(nullptr, true); 
+            PlayerController->GameHasEnded(nullptr, true);
         }
     }
 }

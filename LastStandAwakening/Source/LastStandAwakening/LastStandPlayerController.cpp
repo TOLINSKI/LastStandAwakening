@@ -16,10 +16,10 @@ void ALastStandPlayerController::BeginPlay()
 void ALastStandPlayerController::GameHasEnded(AActor * EndGameFocus, bool bIsWinner)
 {
     // Remeber To Use Super!!!!
-    //Super::GameHasEnded(EndGameFocus, false); // false should be bIsWinner
+    // Super::GameHasEnded(EndGameFocus, bIsWinner); // false should be bIsWinner
     if(bIsWinner)
     {
-        GetWorldTimerManager().SetTimer(RestartTimer, this,&ALastStandPlayerController::ShowGameWonWidget, WinGameDelay);
+        GetWorldTimerManager().SetTimer(RestartTimer, this,&ALastStandPlayerController::ShowWidget, WinGameDelay);
     }
     else
     {
@@ -30,4 +30,10 @@ void ALastStandPlayerController::GameHasEnded(AActor * EndGameFocus, bool bIsWin
         GetPawn()->Destroy();
 
     }
+}
+
+
+void ALastStandPlayerController::ShowWidget()
+{
+    ShowGameWonWidget();
 }

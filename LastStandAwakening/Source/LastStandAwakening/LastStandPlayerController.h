@@ -25,13 +25,13 @@ protected:
 
 private:
 	UPROPERTY(EditAnywhere)
-	float WinGameDelay = 5.f;
+	float WinGameDelay = 19.f;
 
 	UPROPERTY(EditAnywhere)
 	float LooseGameDelay = 6.1;
 
 	FTimerHandle RestartTimer;
 
-	
+	void ShowWidget();
 
 };
