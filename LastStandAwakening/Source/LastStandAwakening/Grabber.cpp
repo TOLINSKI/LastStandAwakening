@@ -79,7 +79,7 @@ void UGrabber::Grab()
 		Grabbing = false;
 		return;
 	}
-	Grabbing = true;
+	
 	// Use Grab only if the Owner has PhysicsHandleComponent:
 	// ======================================================
 	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
@@ -92,6 +92,7 @@ void UGrabber::Grab()
 	bool IsHit = GetGrabbableInReach(HitResult);
 	if (IsHit)
 	{
+		Grabbing = true;
 		// Grabbing using PhysicsHandle when ChannelSweep makess a hit:
 		// ============================================================
 		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
@@ -122,10 +123,10 @@ void UGrabber::Grab()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Display, TEXT("Not Hitting Anything with Grabber component"));
+		// UE_LOG(LogTemp, Display, TEXT("Not Hitting Anything with Grabber component"));
 		FVector Start = GetComponentLocation();
 		FVector End = Start + GetForwardVector() * MaxGrabDistance;
-		DrawDebugSphere(GetWorld(), End, 10, 10, FColor::Red, false, 5);
+		// DrawDebugSphere(GetWorld(), End, 10, 10, FColor::Red, false, 5);
 	}
 }
 

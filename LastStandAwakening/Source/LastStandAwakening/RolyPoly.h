@@ -41,8 +41,11 @@ private:
 	FVector StartLocation;
 	FRotator StartRotation;    
 
-	FVector StandLocation = FVector(12146, 3098, 127);
-	FRotator StandRotation = FRotator(0 ,180 , 0);
+	//FVector StandLocation = FVector(12146, 3098, 127);
+	//FRotator StandRotation = FRotator(0 ,180 , 0);
+
+	FVector StandLocation = FVector(12068, 3964, 127);
+	FRotator StandRotation = FRotator(0 ,-90 , 0);
 
 	float VInterpSpeed = 5.f;
 	float RInterpSpeed = 2.f;
