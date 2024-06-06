@@ -73,12 +73,13 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 void UGrabber::Grab()
 {
-	if (Grabbing)
-	{
-		Release();
-		Grabbing = false;
-		return;
-	}
+	// Release Grabbed feature is unnecessary
+	// if (Grabbing)
+	// {
+	// 	Release();
+	// 	Grabbing = false;
+	// 	return;
+	// }
 	
 	// Use Grab only if the Owner has PhysicsHandleComponent:
 	// ======================================================
