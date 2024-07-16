@@ -31,11 +31,21 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable)
+	void Shake(float DeltaTime);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shake, meta = (AllowPrivateAccess = "true"))
+	bool bShake;
+
 private:
 
 	float RunningTime;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shake, meta = (AllowPrivateAccess = "true"))
 	float ShakeFrequency;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shake, meta = (AllowPrivateAccess = "true"))
 	float ShakeAmplitude;
+
+
 };

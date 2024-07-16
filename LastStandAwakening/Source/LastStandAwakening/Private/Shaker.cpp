@@ -9,6 +9,8 @@ UShaker::UShaker()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+
+	bShake = false;
 }
 
 
@@ -29,6 +31,11 @@ void UShaker::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponen
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (bShake) Shake(DeltaTime);
+}
+
+void UShaker::Shake(float DeltaTime)
+{
 	float FrequencyBound = 1.f / ShakeFrequency;
 
 	RunningTime += DeltaTime;
@@ -36,7 +43,7 @@ void UShaker::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponen
 	{
 		RunningTime = 0.f;
 	}
-	GetOwner()->SetActorLocation(StartLocation + FVector(TransformedSin(), TransformedCos(), 0.f));
+	GetOwner()->SetActorLocation(StartLocation + FVector(TransformedSin(10.f, 5.f), TransformedCos(10.f, 5.f), 0.f));
 }
 
 float UShaker::TransformedSin(float Frequency, float Amplitude)
