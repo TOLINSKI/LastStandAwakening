@@ -1,0 +1,1 @@
+./butler push "D:\Unreal5_Projects\LastStandAwakening\LastStandAwakening\BuildVideoCommunity\Windows\LastStandAwakeningBetaVer3.zip" tolinski/last-stand-awakening:win
