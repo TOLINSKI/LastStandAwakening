@@ -16,26 +16,29 @@ public:
 	// Sets default values for this component's properties
 	UShaker();
 
-	FVector StartLocation;
+	float TransformedSin();
+
+	float TransformedCos();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	float TransformedSin(float Frequency = 0.5f, float Amplitude = 10.f);
-
-	float TransformedCos(float Frequency = 0.5f, float Amplitude = 10.f);
 
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void ShakeHead(float DeltaTime);
+
 	UFUNCTION(BlueprintCallable)
 	void Shake(float DeltaTime);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shake, meta = (AllowPrivateAccess = "true"))
 	bool bShake;
+
+	void SetShakeParams(float Frequency, float Amplitude);
 
 private:
 
@@ -47,5 +50,18 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Shake, meta = (AllowPrivateAccess = "true"))
 	float ShakeAmplitude;
 
+	FVector StartLocation;
+
+	FRotator StartRotation;
+
+	int32 Sign;
+
+	bool StartedOscillation;
+
+	bool SetR;
+
+	float R;
+
+	float Arg;
 
 };

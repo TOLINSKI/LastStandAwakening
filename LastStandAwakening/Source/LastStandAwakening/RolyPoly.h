@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "RolyPoly.generated.h"
 
+class UShaker;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class LASTSTANDAWAKENING_API ARolyPoly : public AActor
 {
@@ -53,5 +55,7 @@ private:
 	bool ShouldStandUp = false;
 	bool FinishStandUp = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UShaker> Shaker;
 	
 };

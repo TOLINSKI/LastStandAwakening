@@ -5,12 +5,16 @@
 #include "Kismet/GameplayStatics.h"
 #include "LastStandGameMode.h"
 #include "BossTrigger.h"
+#include "Shaker.h"
 
 // Sets default values
 ARolyPoly::ARolyPoly()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	Shaker = CreateDefaultSubobject<UShaker>((TEXT("Shaker")));
+	Shaker->SetupAttachment(RootComponent);
 
 }
 
@@ -22,6 +26,8 @@ void ARolyPoly::BeginPlay()
 	StartLocation = GetActorLocation();
 	StartRotation = GetActorRotation();
 	ShouldStandUp = false;
+
+	Shaker->SetShakeParams(0.5f, 2.f);
 }
 
 // Called every frame
@@ -29,11 +35,19 @@ void ARolyPoly::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	Shaker->ShakeHead(DeltaTime);
+
+	// AddActorWorldRotation(FRotator(0.f, 0.f, Val));
+
+	// AddActorWorldRotation(FRotator(0.f, 0.f, 5.f));
+
+
+	/*
 	if (ShouldStandUp)
 	{
 		StandUp();
 	}
-
+	*/
 }
 
 void ARolyPoly::StandUp()
