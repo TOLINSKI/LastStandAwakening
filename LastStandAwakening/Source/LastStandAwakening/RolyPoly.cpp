@@ -6,6 +6,7 @@
 #include "LastStandGameMode.h"
 #include "BossTrigger.h"
 #include "Shaker.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ARolyPoly::ARolyPoly()
@@ -13,9 +14,13 @@ ARolyPoly::ARolyPoly()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Capsule = CreateDefaultSubobject<UCapsuleComponent>((TEXT("RootComponent")));
+	SetRootComponent(Capsule);
+
 	Shaker = CreateDefaultSubobject<UShaker>((TEXT("Shaker")));
 	Shaker->SetupAttachment(RootComponent);
 
+	bStartShake = false;
 }
 
 // Called when the game starts or when spawned
@@ -23,11 +28,28 @@ void ARolyPoly::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Setup Variables
+	ShouldStandUp = false;
+	Shaker->SetShakeParams(0.5f, 90.f); // Params: (Shake Frequency multiplier, Amplitude)
+
+	// Setup Locaions & Rotations
 	StartLocation = GetActorLocation();
 	StartRotation = GetActorRotation();
-	ShouldStandUp = false;
+	StandRotation.Yaw = 90.f;
 
-	Shaker->SetShakeParams(0.5f, 2.f);
+	// Setup Meshes:
+	TArray<TObjectPtr<UStaticMeshComponent>> Meshes;
+	GetComponents<UStaticMeshComponent>(Meshes);
+	if (Meshes[0])
+	{
+		BodyMesh = Meshes[0];
+	}
+	if (Meshes[1])
+	{
+		HeadMesh = Meshes[1];
+	}
+	BodyMeshStartLocation = BodyMesh->GetComponentLocation();
+	BodyMeshStartRotation = BodyMesh->GetComponentRotation();
 }
 
 // Called every frame
@@ -35,55 +57,51 @@ void ARolyPoly::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Shaker->ShakeHead(DeltaTime);
-
-	// AddActorWorldRotation(FRotator(0.f, 0.f, Val));
-
-	// AddActorWorldRotation(FRotator(0.f, 0.f, 5.f));
-
-
-	/*
 	if (ShouldStandUp)
 	{
 		StandUp();
 	}
-	*/
 }
 
 void ARolyPoly::StandUp()
 {
 	float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
 	FRotator ActorRotation = GetActorRotation();
-
-	if (!ActorRotation.Equals(StandRotation, 1))
+	
+	// Interp to vetical roation & Location -> Shake & Interp to vertical Location 
+	if (!bStartShake && !BodyMesh->GetComponentRotation().Equals(StandRotation, 20))
 	{
-		SetActorRotation(FMath::RInterpTo(
-			ActorRotation, 
+		BodyMesh->SetWorldRotation(FMath::RInterpTo(
+			BodyMesh->GetComponentRotation(),
 			StandRotation,
 			DeltaTime,
-			RInterpSpeed));
+			15.f));
 	}
-	else
+	else if (!bStartShake && StandUpSound)
 	{
-		ShouldStandUp = false;	
-		// ALastStandGameMode* GameMode = GetWorld()->GetAuthGameMode<ALastStandGameMode>();
-		// if (GameMode)
-		// {
-		// 	GameMode->GameWon();
-		// }
-		ShowGameWonWidget();
+		bStartShake = true;
+		UGameplayStatics::PlaySoundAtLocation(
+			GetWorld(),
+			StandUpSound,
+			BodyMesh->GetComponentLocation());
+		bStartShake = true;
 	}
 
-	if (FVector::Dist(GetActorLocation(), StandLocation) > 1)
+	if (bStartShake)
 	{
-		SetActorLocation(FMath::VInterpTo(
-			GetActorLocation(), 
+		Shaker->ShakeRoly(BodyMesh);
+	}
+
+	if (FVector::Dist(BodyMesh->GetComponentLocation(), StandLocation) > 1)
+	{
+		BodyMesh->SetWorldLocation(FMath::VInterpTo(
+			BodyMesh->GetComponentLocation(),
 			StandLocation,
 			DeltaTime,
-			VInterpSpeed));
+			20.f));
 	}
 }
-
+ 
 // Initiated By BossTrigger.cpp
 void ARolyPoly::SetShouldStandUp(bool value)
 {
@@ -92,9 +110,18 @@ void ARolyPoly::SetShouldStandUp(bool value)
 
 void ARolyPoly::Reset()
 {
-	ShouldStandUp = false;
-	SetActorLocation(StartLocation, false, nullptr, ETeleportType::TeleportPhysics);
-	SetActorRotation(StartRotation,ETeleportType::TeleportPhysics);
+	UE_LOG(LogTemp, Error, TEXT("Roly Reset"));
+
 	UBossTrigger* Trigger = Cast<UBossTrigger>(GetComponentByClass(UBoxComponent::StaticClass()));
 	Trigger->Reset();
+	Shaker->Reset();
+	ShouldStandUp = false;
+	bStartShake = false;
+
+	SetActorLocation(StartLocation, false, nullptr, ETeleportType::ResetPhysics);
+	SetActorRotation(StartRotation,ETeleportType::ResetPhysics);
+	BodyMesh->SetWorldLocation(BodyMeshStartLocation);
+	BodyMesh->SetWorldRotation(BodyMeshStartRotation);
+
+	Shaker->SetShakeParams(0.5f, 90.f);
 }

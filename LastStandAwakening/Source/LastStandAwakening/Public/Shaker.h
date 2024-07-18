@@ -30,7 +30,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ShakeHead(float DeltaTime);
+	void ShakeRoly(TObjectPtr<UStaticMeshComponent> BodyMesh);
 
 	UFUNCTION(BlueprintCallable)
 	void Shake(float DeltaTime);
@@ -39,6 +39,8 @@ public:
 	bool bShake;
 
 	void SetShakeParams(float Frequency, float Amplitude);
+
+	void Reset();
 
 private:
 
@@ -54,14 +56,16 @@ private:
 
 	FRotator StartRotation;
 
-	int32 Sign;
-
-	bool StartedOscillation;
-
-	bool SetR;
-
-	float R;
+	/**
+	* Head Shake Stuff
+	*/
 
 	float Arg;
+
+	float ExpHelper;
+
+	FVector BodyMeshStartLocation;
+
+	bool bSetBodyMeshStart;
 
 };

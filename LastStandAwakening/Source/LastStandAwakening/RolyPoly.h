@@ -7,6 +7,8 @@
 #include "RolyPoly.generated.h"
 
 class UShaker;
+class UCapsuleComponent;
+class USoundBase;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class LASTSTANDAWAKENING_API ARolyPoly : public AActor
@@ -43,11 +45,13 @@ private:
 	FVector StartLocation;
 	FRotator StartRotation;    
 
-	//FVector StandLocation = FVector(12146, 3098, 127);
-	//FRotator StandRotation = FRotator(0 ,180 , 0);
+	FVector BodyMeshStartLocation;
+	FRotator BodyMeshStartRotation;
 
-	FVector StandLocation = FVector(12068, 3964, 127);
-	FRotator StandRotation = FRotator(0 ,-90 , 0);
+	bool bStartShake;
+
+	FVector StandLocation = FVector(12192.f, 3956.f, 5.f);
+	FRotator StandRotation = FRotator::ZeroRotator;
 
 	float VInterpSpeed = 5.f;
 	float RInterpSpeed = 2.f;
@@ -57,5 +61,14 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UShaker> Shaker;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = RootComponent, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCapsuleComponent> Capsule;
+
+	TObjectPtr<UStaticMeshComponent> BodyMesh;
+
+	TObjectPtr<UStaticMeshComponent> HeadMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USoundBase> StandUpSound;
 };
