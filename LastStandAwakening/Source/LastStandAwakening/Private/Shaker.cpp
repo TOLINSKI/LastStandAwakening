@@ -70,7 +70,7 @@ float UShaker::TransformedCos()
 	return ShakeAmplitude * FMath::Cos(Arg);
 }
 
-void UShaker::ShakeRoly(TObjectPtr<UStaticMeshComponent> BodyMesh)
+void UShaker::ShakeRoly(TObjectPtr<USkeletalMeshComponent> BodyMesh, bool& bShouldLook)
 {
 	if (!bSetBodyMeshStart)
 	{
@@ -119,7 +119,10 @@ void UShaker::ShakeRoly(TObjectPtr<UStaticMeshComponent> BodyMesh)
 					BodyMeshStartLocation.Z + HalfBodySize - HalfBodySize * FMath::Abs(TransformedCos() / ShakeAmplitude)));
 		}
 	}
-
+	else
+	{
+		bShouldLook = true;
+	}
 }
 
 void UShaker::Reset()

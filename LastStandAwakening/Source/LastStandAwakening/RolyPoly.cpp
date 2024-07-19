@@ -7,6 +7,7 @@
 #include "BossTrigger.h"
 #include "Shaker.h"
 #include "Components/CapsuleComponent.h"
+#include "Public/RolyPolyAnimInstance.h"
 
 // Sets default values
 ARolyPoly::ARolyPoly()
@@ -19,8 +20,6 @@ ARolyPoly::ARolyPoly()
 
 	Shaker = CreateDefaultSubobject<UShaker>((TEXT("Shaker")));
 	Shaker->SetupAttachment(RootComponent);
-
-	bStartShake = false;
 }
 
 // Called when the game starts or when spawned
@@ -29,7 +28,6 @@ void ARolyPoly::BeginPlay()
 	Super::BeginPlay();
 
 	// Setup Variables
-	ShouldStandUp = false;
 	Shaker->SetShakeParams(0.5f, 90.f); // Params: (Shake Frequency multiplier, Amplitude)
 
 	// Setup Locaions & Rotations
@@ -38,28 +36,33 @@ void ARolyPoly::BeginPlay()
 	StandRotation.Yaw = 90.f;
 
 	// Setup Meshes:
-	TArray<TObjectPtr<UStaticMeshComponent>> Meshes;
-	GetComponents<UStaticMeshComponent>(Meshes);
-	if (Meshes[0])
-	{
-		BodyMesh = Meshes[0];
-	}
-	if (Meshes[1])
-	{
-		HeadMesh = Meshes[1];
-	}
+	BodyMesh = GetComponentByClass<USkeletalMeshComponent>();
 	BodyMeshStartLocation = BodyMesh->GetComponentLocation();
 	BodyMeshStartRotation = BodyMesh->GetComponentRotation();
+
+	HeadMesh = GetComponentByClass<UStaticMeshComponent>();
+	HeadMesh->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform, FName("head_socket"));
 }
 
 // Called every frame
 void ARolyPoly::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (ShouldStandUp)
+	if (bShouldAnimate) // bShouldAnimate needs to be set manually in RolyPoly.h
 	{
-		StandUp();
+		if (ShouldStandUp)
+		{
+			StandUp();
+		}
+
+		if (bDoneShaking && PlayerInRange())
+		{
+			bShouldLook = true;
+		}
+		else
+		{
+			bShouldLook = false;
+		}
 	}
 }
 
@@ -79,6 +82,7 @@ void ARolyPoly::StandUp()
 	}
 	else if (!bStartShake && StandUpSound)
 	{
+		BodyMesh->SetWorldRotation(StandRotation);
 		bStartShake = true;
 		UGameplayStatics::PlaySoundAtLocation(
 			GetWorld(),
@@ -89,7 +93,11 @@ void ARolyPoly::StandUp()
 
 	if (bStartShake)
 	{
-		Shaker->ShakeRoly(BodyMesh);
+		Shaker->ShakeRoly(BodyMesh, bDoneShaking);
+		if (bDoneShaking)
+		{
+			ShouldStandUp = false;
+		}
 	}
 
 	if (FVector::Dist(BodyMesh->GetComponentLocation(), StandLocation) > 1)
@@ -103,9 +111,9 @@ void ARolyPoly::StandUp()
 }
  
 // Initiated By BossTrigger.cpp
-void ARolyPoly::SetShouldStandUp(bool value)
+void ARolyPoly::SetShouldStandUp(bool Value)
 {
-	ShouldStandUp = value;
+	ShouldStandUp = Value;
 }
 
 void ARolyPoly::Reset()
@@ -115,8 +123,7 @@ void ARolyPoly::Reset()
 	UBossTrigger* Trigger = Cast<UBossTrigger>(GetComponentByClass(UBoxComponent::StaticClass()));
 	Trigger->Reset();
 	Shaker->Reset();
-	ShouldStandUp = false;
-	bStartShake = false;
+	InitVariables();
 
 	SetActorLocation(StartLocation, false, nullptr, ETeleportType::ResetPhysics);
 	SetActorRotation(StartRotation,ETeleportType::ResetPhysics);
@@ -124,4 +131,22 @@ void ARolyPoly::Reset()
 	BodyMesh->SetWorldRotation(BodyMeshStartRotation);
 
 	Shaker->SetShakeParams(0.5f, 90.f);
+}
+
+bool ARolyPoly::PlayerInRange()
+{
+	if (TObjectPtr<APawn> Player = UGameplayStatics::GetPlayerPawn(this, 0))
+	{
+		return FVector::Dist(Player->GetActorLocation(), BodyMesh->GetComponentLocation()) < 1000.f;
+	}
+	return false;
+}
+
+void ARolyPoly::InitVariables()
+{
+	bStartShake = false;
+	bDoneShaking = false;
+	bShouldLook = false;
+	ShouldStandUp = false;
+	FinishStandUp = false;
 }

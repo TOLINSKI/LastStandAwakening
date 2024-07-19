@@ -30,7 +30,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void ShakeRoly(TObjectPtr<UStaticMeshComponent> BodyMesh);
+	void ShakeRoly(TObjectPtr<USkeletalMeshComponent> BodyMesh, bool& bShake);
 
 	UFUNCTION(BlueprintCallable)
 	void Shake(float DeltaTime);

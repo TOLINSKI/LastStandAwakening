@@ -41,6 +41,9 @@ public:
 	void PlayStandUpSound();
 
 private:
+	// =========================
+	bool bShouldAnimate = true;
+	// =========================
 
 	FVector StartLocation;
 	FRotator StartRotation;    
@@ -49,6 +52,8 @@ private:
 	FRotator BodyMeshStartRotation;
 
 	bool bStartShake;
+	bool bShouldLook;
+	bool bDoneShaking;
 
 	FVector StandLocation = FVector(12192.f, 3956.f, 5.f);
 	FRotator StandRotation = FRotator::ZeroRotator;
@@ -56,8 +61,8 @@ private:
 	float VInterpSpeed = 5.f;
 	float RInterpSpeed = 2.f;
 
-	bool ShouldStandUp = false;
-	bool FinishStandUp = false;
+	bool ShouldStandUp;
+	bool FinishStandUp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UShaker> Shaker;
@@ -65,10 +70,24 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = RootComponent, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCapsuleComponent> Capsule;
 
-	TObjectPtr<UStaticMeshComponent> BodyMesh;
+	TObjectPtr<USkeletalMeshComponent> BodyMesh;
 
+	// TODO: Change to Skeletal Mesh Component
 	TObjectPtr<UStaticMeshComponent> HeadMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USoundBase> StandUpSound;
+
+	// Functions:
+	//======================================================================
+
+	bool PlayerInRange();
+
+	void InitVariables();
+
+	// Getters and Setters:
+	// =====================================================================
+public:
+
+	FORCEINLINE bool GetShouldLook() { return bShouldLook; }
 };
