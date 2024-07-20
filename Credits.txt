@@ -10,6 +10,10 @@ Mesh - Roly-poly doll | Неваляшка by shaldmidev
 
 https://sketchfab.com/3d-models/roly-poly-doll-fd2a76dca01e42ca9630c31ecb774598
 
+Scales:
+=======
+Mesh - Scales by FlukierJupiter
+https://sketchfab.com/3d-models/scales-2ed4e14bb69944078ef0bb862b256b2a
 
 Orange Boy:
 ===========

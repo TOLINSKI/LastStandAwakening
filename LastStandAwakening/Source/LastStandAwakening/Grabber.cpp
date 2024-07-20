@@ -73,13 +73,12 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 void UGrabber::Grab()
 {
-	// Release Grabbed feature is unnecessary
-	// if (Grabbing)
-	// {
-	// 	Release();
-	// 	Grabbing = false;
-	// 	return;
-	// }
+	if (Grabbing)
+	{
+	Release();
+	Grabbing = false;
+	return;
+	}
 	
 	// Use Grab only if the Owner has PhysicsHandleComponent:
 	// ======================================================
@@ -138,6 +137,7 @@ void UGrabber::Release()
 	{
 		AActor* GrabbedActor = PhysicsHandle -> GetGrabbedComponent() -> GetOwner();
 		GrabbedActor -> Tags.Remove("Grabbed");
+		PhysicsHandle->GetGrabbedComponent()->SetSimulatePhysics(true);
 		PhysicsHandle -> GetGrabbedComponent() -> WakeAllRigidBodies();
 		PhysicsHandle -> ReleaseComponent();
 	}
