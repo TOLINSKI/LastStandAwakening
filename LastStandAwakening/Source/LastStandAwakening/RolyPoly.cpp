@@ -118,8 +118,6 @@ void ARolyPoly::SetShouldStandUp(bool Value)
 
 void ARolyPoly::Reset()
 {
-	UE_LOG(LogTemp, Error, TEXT("Roly Reset"));
-
 	UBossTrigger* Trigger = Cast<UBossTrigger>(GetComponentByClass(UBoxComponent::StaticClass()));
 	Trigger->Reset();
 	Shaker->Reset();
