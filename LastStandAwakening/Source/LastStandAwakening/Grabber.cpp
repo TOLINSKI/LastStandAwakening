@@ -92,15 +92,22 @@ void UGrabber::Grab()
 	bool IsHit = GetGrabbableInReach(HitResult);
 	if (IsHit)
 	{
+		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
+		UE_LOG(LogTemp, Display, TEXT("Name: %s"), *HitResult.GetActor()->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("Attached to: %s"), *HitComponent->GetAttachSocketName().ToString());
+		if (HitComponent->GetAttachSocketName() == FName("judgement_socket"))
+		{
+			HitComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		}
 		Grabbing = true;
 		// Grabbing using PhysicsHandle when ChannelSweep makess a hit:
 		// ============================================================
-		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
-		UE_LOG(LogTemp, Display, TEXT("Name: %s"), *HitResult.GetActor()->GetName());
+
 		HitComponent -> WakeAllRigidBodies(); // The physics engine needs wake up when interacted with
 		HitComponent -> SetSimulatePhysics(true);
 		AActor * HitActor = HitResult.GetActor();
 		HitActor -> Tags.Add("Grabbed");
+		
 		// HitActor -> DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		PhysicsHandle -> GrabComponentAtLocationWithRotation(
 			HitResult.GetComponent(),

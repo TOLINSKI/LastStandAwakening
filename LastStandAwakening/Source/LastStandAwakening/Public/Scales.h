@@ -10,6 +10,7 @@ class USkeletalMeshComponent;
 class UCapsuleComponent;
 class UBoxComponent;
 class AProtagonist;
+class ATrophy;
 
 UCLASS()
 class LASTSTANDAWAKENING_API AScales : public AActor
@@ -38,9 +39,26 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> Mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Trigger, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBoxComponent> TriggerBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collision, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBoxComponent> RightScaleCollisionBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collision, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBoxComponent> LeftScaleCollisionBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AProtagonist> Player;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<ATrophy> Trophy;
+
+	float AccumulateAngle;
+
+	float AngleOffset;
+
+public:
+
+	FORCEINLINE float GetAngleOffset() const { return AngleOffset; }
 };
