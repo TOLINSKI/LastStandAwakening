@@ -56,6 +56,7 @@ private:
 
 	float AccumulateAngle;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float AngleOffset;
 
 public:

@@ -135,7 +135,7 @@ bool ARolyPoly::PlayerInRange()
 {
 	if (TObjectPtr<APawn> Player = UGameplayStatics::GetPlayerPawn(this, 0))
 	{
-		return FVector::Dist(Player->GetActorLocation(), BodyMesh->GetComponentLocation()) < 1000.f;
+		return FVector::Dist(Player->GetActorLocation(), BodyMesh->GetComponentLocation()) < 1200.f;
 	}
 	return false;
 }

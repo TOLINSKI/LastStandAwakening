@@ -26,12 +26,6 @@ AScales::AScales()
 	LeftScaleCollisionBox = CreateDefaultSubobject<UBoxComponent>(FName("LeftScaleCollision"));
 	LeftScaleCollisionBox->SetupAttachment(Mesh);
 
-	/*
-	TrophyChild = CreateDefaultSubobject<UChildActorComponent>(FName("Trophy"));
-	TrophyChild->SetupAttachment(Mesh);
-	TrophyChild->SetChildActorClass(TrophyClass);
-	*/
-
 	AngleOffset = 0.f;
 	AccumulateAngle = 0.f;
 }
@@ -69,8 +63,9 @@ void AScales::Tick(float DeltaTime)
 
 	for (TObjectPtr<AActor> Actor : OverlappingActors)
 	{
+		// UE_LOG(LogTemp, Display, TEXT(" Has Actors"));
 		// TODO: Logic 
-		if (!Actor->ActorHasTag(TEXT("scales")) && !Actor->ActorHasTag(TEXT("Grabbed")))
+		if (Actor.GetName() != GetName() && !Actor->ActorHasTag(TEXT("Grabbed")))
 		{
 			UE_LOG(LogTemp, Display, TEXT("Scales Overlapping: %s"), *Actor->GetName());
 			if (Actor->GetComponentByClass<UStaticMeshComponent>() && Actor != Player)
@@ -83,20 +78,41 @@ void AScales::Tick(float DeltaTime)
 
 			if (Actor->ActorHasTag("weight"))
 			{
-				AccumulateAngle += 15.f;
+				AccumulateAngle += 30.f;
 			}
-			else if (Actor->ActorHasTag("secondObject"))
+			else if (Actor->ActorHasTag("Ball_1"))
+			{
+				AccumulateAngle += 1.f;
+			}
+			else if (Actor->ActorHasTag("Ball_3"))
+			{
+				AccumulateAngle += 3.f;
+			}
+			else if (Actor->ActorHasTag("Ball_8"))
+			{
+				AccumulateAngle += 8.f;
+			}
+			else if (Actor->ActorHasTag("Ball_10"))
 			{
 				AccumulateAngle += 10.f;
+			}
+			else if (Actor->ActorHasTag("Ball_13"))
+			{
+				AccumulateAngle += 13.f;
+			}
+			else if (Actor->ActorHasTag("Ball_14"))
+			{
+				AccumulateAngle += 14.f;
 			}
 			else if (Actor == Player)
 			{
 				AccumulateAngle += 15.f;
 			}
-
-			AngleOffset = AccumulateAngle;
-			AccumulateAngle = 0.f;
 		}
 	}
+	AngleOffset = AccumulateAngle;
+	AccumulateAngle = 0.f;
+	if ( AngleOffset > 0.f)
+		UE_LOG(LogTemp, Warning, TEXT("Total weight: %f"), AngleOffset);
 }
 
