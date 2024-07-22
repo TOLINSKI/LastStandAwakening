@@ -11,6 +11,10 @@ class UCapsuleComponent;
 class UBoxComponent;
 class AProtagonist;
 class ATrophy;
+class ASpotLight;
+class UCameraComponent;
+class USpringArmComponent;
+class ULevelSequence;
 
 UCLASS()
 class LASTSTANDAWAKENING_API AScales : public AActor
@@ -20,6 +24,9 @@ class LASTSTANDAWAKENING_API AScales : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AScales();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnScalesChange();
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,6 +43,8 @@ public:
 
 private:
 
+	// Variables:
+	// ==========
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> Mesh;
 
@@ -51,13 +60,54 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AProtagonist> Player;
 
+	TObjectPtr<AActor> CameraAngle;
+
+	TObjectPtr<USpringArmComponent> SpringArm;
+
+	TObjectPtr<UCameraComponent> Camera;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<ATrophy> Trophy;
+
+	TObjectPtr<ASpotLight> TargetLight;
 
 	float AccumulateAngle;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float AngleOffset;
+
+	float PrevAngleOffset;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bAngleChanged;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bShouldPlaySequence;
+
+	bool bFirstScaleChange;
+
+	bool bWaitingForCamera;
+
+	enum class ECameraState
+	{
+		ECS_OnPlayer,
+		ECS_OnAngle
+	};
+
+	ECameraState CameraState;
+
+	// Functions:
+	// ===========
+
+	void UpdateScalesAngle();
+
+	bool HasAngleChanged();
+
+	UFUNCTION(BlueprintCallable)
+	void ResetCamera(UCameraComponent* Camera);
+
+	UFUNCTION()
+	void ChangeCameraSequence();
 
 public:
 

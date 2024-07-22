@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "Protagonist.generated.h"
 
+class UCameraComponent;
+
+
 UCLASS()
 class LASTSTANDAWAKENING_API AProtagonist : public ACharacter
 {
@@ -36,4 +39,10 @@ private:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float GamePadRotationRate = 50;
 
+	TObjectPtr<UCameraComponent> Camera;
+
+public:
+
+	FORCEINLINE TObjectPtr<UCameraComponent> GetCamera() { return Camera; }
+	
 };

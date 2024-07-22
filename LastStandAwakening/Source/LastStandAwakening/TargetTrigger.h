@@ -6,6 +6,9 @@
 #include "Components/BoxComponent.h"
 #include "TargetTrigger.generated.h"
 
+class AProtagonist;
+class AScales;
+
 /**
  * 
  */
@@ -17,6 +20,8 @@ class LASTSTANDAWAKENING_API UTargetTrigger : public UBoxComponent
 public:	
 	// Sets default values for this actor's properties
 	UTargetTrigger();
+	
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,6 +32,30 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
 private:
-	bool BulletInTarget(TArray<AActor*> Actors);
 
+	TObjectPtr<AProtagonist> Player;
+
+	TObjectPtr<AScales> Scales;
+
+
+	// Functions:
+	// =======================================
+	bool BallInTarget();
+
+	bool GameWinConditionMet();
+
+	bool PlayerIsOverlapping();
+
+	void SetGameWon();
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FString GameWinCondition;
+
+
+
+public:
+
+	FORCEINLINE FString GetGameWinCondition() { return GameWinCondition; }
+
+	
 };

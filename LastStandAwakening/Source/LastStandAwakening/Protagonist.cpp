@@ -2,6 +2,7 @@
 
 
 #include "Protagonist.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 AProtagonist::AProtagonist()
@@ -16,6 +17,7 @@ void AProtagonist::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Camera = Cast<UCameraComponent>(GetComponentByClass<UCameraComponent>());
 }
 
 // Called every frame

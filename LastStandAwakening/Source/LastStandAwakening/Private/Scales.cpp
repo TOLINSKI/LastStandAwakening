@@ -7,6 +7,12 @@
 #include "Kismet/GameplayStatics.h"
 #include "Trophy.h"
 #include "Engine.h"
+#include "Engine/SpotLight.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "TimerManager.h"
+
+#define SCALES_WIN_WEIGHT 18.f
 
 // Sets default values
 AScales::AScales()
@@ -28,12 +34,18 @@ AScales::AScales()
 
 	AngleOffset = 0.f;
 	AccumulateAngle = 0.f;
+	PrevAngleOffset = 0.f;
+	bAngleChanged = false;
+	bShouldPlaySequence = false;
+	bFirstScaleChange = true;
 }
 
 // Called when the game starts or when spawned
 void AScales::BeginPlay()
 {
 	Super::BeginPlay();
+
+	bWaitingForCamera = false;
 
 	TriggerBox->AttachToComponent(Mesh, FAttachmentTransformRules::KeepRelativeTransform, FName("scale_l_trigger_socket"));
 
@@ -43,6 +55,12 @@ void AScales::BeginPlay()
 
 	Player = Cast<AProtagonist>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
+	Camera = Player->GetCamera();
+
+	// SpringArm = Cast<USpringArmComponent>(Camera->GetAttachParent());
+
+	// Setup Trophy:
+	// ========================================================================
 	for (TObjectPtr<ATrophy> TrophyIterator : TActorRange<ATrophy>(GetWorld()))
 	{
 		Trophy = TrophyIterator;
@@ -51,6 +69,36 @@ void AScales::BeginPlay()
 	{
 		Trophy->AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("scale_r_object_socket"));
 	}
+	// TODO: 
+	// Adding Actor reference using the Actor reference tool 
+	// 
+	// UPROPERTY(BlueprintReadWrite, EditAnywhere, InstanceEditable) AActor* ScaleReference;
+
+	// Setup TargetLight:
+	// ========================================================================
+	for (TObjectPtr<ASpotLight> SpotLightIterator : TActorRange<ASpotLight>(GetWorld()))
+	{
+		if (SpotLightIterator->ActorHasTag("target_light"))
+		{
+			TargetLight = SpotLightIterator;
+			break;
+		}
+	}
+	if (TargetLight)
+	{
+		TargetLight->SetEnabled(false);
+	}
+
+	// Setup CameraAngle:
+	// ========================================================================
+	for (TObjectPtr<AActor> CameraIterator : TActorRange<AActor>(GetWorld()))
+	{
+		if (CameraIterator->ActorHasTag("camera_angle_scales"))
+		{
+			CameraAngle = CameraIterator;
+			break;
+		}
+	}
 }
 
 // Called every frame
@@ -58,6 +106,20 @@ void AScales::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UpdateScalesAngle();
+
+	if (AngleOffset == SCALES_WIN_WEIGHT)
+	{
+		TargetLight->SetEnabled(true);
+	}
+	else
+	{
+		TargetLight->SetEnabled(false);
+	}
+}
+
+void AScales::UpdateScalesAngle()
+{
 	TArray<AActor*> OverlappingActors;
 	TriggerBox->GetOverlappingActors(OverlappingActors);
 
@@ -104,15 +166,65 @@ void AScales::Tick(float DeltaTime)
 			{
 				AccumulateAngle += 14.f;
 			}
+			else if (Actor->ActorHasTag("weight"))
+			{
+				AccumulateAngle += 25.f;
+			}
 			else if (Actor == Player)
 			{
-				AccumulateAngle += 15.f;
+				AccumulateAngle += SCALES_WIN_WEIGHT;
 			}
 		}
 	}
 	AngleOffset = AccumulateAngle;
 	AccumulateAngle = 0.f;
-	if ( AngleOffset > 0.f)
-		UE_LOG(LogTemp, Warning, TEXT("Total weight: %f"), AngleOffset);
+	HasAngleChanged();
 }
 
+bool AScales::HasAngleChanged()
+{
+	if (PrevAngleOffset != AngleOffset)
+	{
+		if (AngleOffset == SCALES_WIN_WEIGHT || bFirstScaleChange)
+		{
+			bShouldPlaySequence = true;
+			bFirstScaleChange = false;
+		}
+		bAngleChanged = true;
+		PrevAngleOffset = AngleOffset;
+	}
+	else
+	{
+		bShouldPlaySequence = false;
+		bAngleChanged = false;
+	}
+	return bAngleChanged;
+}
+
+void AScales::ChangeCameraSequence()
+{
+	if (Camera && CameraAngle)
+	{
+		if (CameraState == ECameraState::ECS_OnPlayer)
+		{
+			Camera->AttachToComponent(CameraAngle->GetRootComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			CameraState = ECameraState::ECS_OnAngle;
+		}
+		FTimerHandle TimerHandle;
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindUFunction(this, FName("ResetCamera"), Camera);
+		GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 2.f, false);
+		bWaitingForCamera = true;
+	}
+}
+
+void AScales::ResetCamera(UCameraComponent* InCamera)
+{
+	InCamera->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	if (SpringArm)
+	{
+		InCamera->AttachToComponent(SpringArm, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		CameraState = ECameraState::ECS_OnPlayer;
+		bWaitingForCamera = false;
+	}
+}
