@@ -3,6 +3,7 @@
 
 #include "Protagonist.h"
 #include "Camera/CameraComponent.h"
+#include "Grabber.h"
 
 // Sets default values
 AProtagonist::AProtagonist()
@@ -18,6 +19,9 @@ void AProtagonist::BeginPlay()
 	Super::BeginPlay();
 
 	Camera = Cast<UCameraComponent>(GetComponentByClass<UCameraComponent>());
+
+	Grabber = GetComponentByClass<UGrabber>();
+
 }
 
 // Called every frame
@@ -44,4 +48,11 @@ float AProtagonist::TakeDamage(float DamageAmount, FDamageEvent const &DamageEve
 
     //return Health;
 	return 0.f;
+}
+
+TObjectPtr<AActor> AProtagonist::GetGrabbedActor()
+{
+	if (Grabber)
+		return Grabber->GetGrabbedActor();
+	return nullptr;
 }

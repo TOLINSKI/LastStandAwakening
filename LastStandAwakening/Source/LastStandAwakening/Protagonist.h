@@ -7,6 +7,7 @@
 #include "Protagonist.generated.h"
 
 class UCameraComponent;
+class UGrabber;
 
 
 UCLASS()
@@ -41,8 +42,12 @@ private:
 
 	TObjectPtr<UCameraComponent> Camera;
 
+	TObjectPtr<UGrabber> Grabber;
+
 public:
 
 	FORCEINLINE TObjectPtr<UCameraComponent> GetCamera() { return Camera; }
+
+	FORCEINLINE TObjectPtr<AActor> GetGrabbedActor();
 	
 };

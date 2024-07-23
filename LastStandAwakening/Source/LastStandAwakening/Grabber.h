@@ -44,9 +44,15 @@ private:
 
 	bool Grabbing = false;
 
+	TObjectPtr<AActor> GrabbedActor;
+
 	// Functions:
 	// ==========
 	UPhysicsHandleComponent* GetPhysicsHandle() const; // Function cannot cannot change the values of the object
 	// i.e. Cannot change the attributes above (Damage, GrabRadius, HoldDistance etc...)
 	bool GetGrabbableInReach(FHitResult& OutHitResult) const;
+
+public:
+
+	FORCEINLINE TObjectPtr<AActor> GetGrabbedActor() { return GrabbedActor; }
 };

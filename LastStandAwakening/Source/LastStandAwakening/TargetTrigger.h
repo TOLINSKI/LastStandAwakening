@@ -35,6 +35,7 @@ private:
 
 	TObjectPtr<AProtagonist> Player;
 
+	UPROPERTY(EditAnywhere, Category = OtherActors, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AScales> Scales;
 
 

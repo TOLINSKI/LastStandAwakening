@@ -25,9 +25,6 @@ public:
 	// Sets default values for this actor's properties
 	AScales();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnScalesChange();
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -38,8 +35,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	float WinWeight;
+
 	UFUNCTION(BlueprintImplementableEvent)
-	void MoveCamera(FVector Location);
+	void PlaySequence();
 
 private:
 
@@ -57,19 +56,17 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collision, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBoxComponent> LeftScaleCollisionBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = OtherActors, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AProtagonist> Player;
 
-	TObjectPtr<AActor> CameraAngle;
-
-	TObjectPtr<USpringArmComponent> SpringArm;
-
-	TObjectPtr<UCameraComponent> Camera;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = OtherActors, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<ATrophy> Trophy;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = OtherActors, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<ASpotLight> TargetLight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = OtherActors, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AActor> Target;
 
 	float AccumulateAngle;
 
@@ -82,7 +79,7 @@ private:
 	bool bAngleChanged;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	bool bShouldPlaySequence;
+	bool bHasPlayedSequence;
 
 	bool bFirstScaleChange;
 
@@ -103,11 +100,7 @@ private:
 
 	bool HasAngleChanged();
 
-	UFUNCTION(BlueprintCallable)
-	void ResetCamera(UCameraComponent* Camera);
-
-	UFUNCTION()
-	void ChangeCameraSequence();
+	float GetWeight(TObjectPtr<AActor> Actor);
 
 public:
 

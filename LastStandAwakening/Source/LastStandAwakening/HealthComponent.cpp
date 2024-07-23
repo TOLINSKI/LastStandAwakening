@@ -54,6 +54,4 @@ void UHealthComponent::FellToDeath()
 		GameMode->PawnDied(Pawn);
 	}
 	Health = 0;
-	UE_LOG(LogTemp, Display, TEXT("Death By Carpet"));
-	
 }

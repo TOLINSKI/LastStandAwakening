@@ -23,7 +23,7 @@ void UTargetTrigger::BeginPlay()
 	
 	Player = Cast<AProtagonist>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
-	Scales = Cast<AScales>(UGameplayStatics::GetActorOfClass(GetWorld(), AScales::StaticClass()));
+	UE_LOG(LogTemp, Display, TEXT("Setting up TRIGGERRRRRRRR"));
 }
 
 
@@ -47,6 +47,7 @@ bool UTargetTrigger::BallInTarget()
 	{
 		if (Actor->ActorHasTag("Ball_8"))
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Ball in target"));
 			return true;
 		}
 	}
@@ -55,7 +56,13 @@ bool UTargetTrigger::BallInTarget()
 
 bool UTargetTrigger::GameWinConditionMet()
 {
-	return Scales && Scales->GetAngleOffset() == 15.f;
+
+	if (Scales && Scales->GetAngleOffset() == Scales->WinWeight)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Game Win Confidition met"));
+		return true;
+	}
+	return false;
 }
 
 bool UTargetTrigger::PlayerIsOverlapping()

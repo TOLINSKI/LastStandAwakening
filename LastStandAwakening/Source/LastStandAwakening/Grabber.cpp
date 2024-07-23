@@ -93,20 +93,15 @@ void UGrabber::Grab()
 	if (IsHit)
 	{
 		UPrimitiveComponent* HitComponent = HitResult.GetComponent();
-		UE_LOG(LogTemp, Display, TEXT("Name: %s"), *HitResult.GetActor()->GetName());
-		UE_LOG(LogTemp, Warning, TEXT("Attached to: %s"), *HitComponent->GetAttachSocketName().ToString());
-		if (HitComponent->GetAttachSocketName() == FName("judgement_socket"))
-		{
-			HitComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		}
 		Grabbing = true;
+
 		// Grabbing using PhysicsHandle when ChannelSweep makess a hit:
 		// ============================================================
 
 		HitComponent -> WakeAllRigidBodies(); // The physics engine needs wake up when interacted with
 		HitComponent -> SetSimulatePhysics(true);
-		AActor * HitActor = HitResult.GetActor();
-		HitActor -> Tags.Add("Grabbed");
+		GrabbedActor = HitResult.GetActor();
+		GrabbedActor -> Tags.Add("Grabbed");
 		
 		// HitActor -> DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		PhysicsHandle -> GrabComponentAtLocationWithRotation(
@@ -142,8 +137,9 @@ void UGrabber::Release()
 	UPhysicsHandleComponent * PhysicsHandle  = GetPhysicsHandle();
 	if (PhysicsHandle && PhysicsHandle -> GetGrabbedComponent())
 	{
-		AActor* GrabbedActor = PhysicsHandle -> GetGrabbedComponent() -> GetOwner();
+		GrabbedActor = PhysicsHandle -> GetGrabbedComponent() -> GetOwner();
 		GrabbedActor -> Tags.Remove("Grabbed");
+		GrabbedActor = nullptr;
 		PhysicsHandle->GetGrabbedComponent()->SetSimulatePhysics(true);
 		PhysicsHandle -> GetGrabbedComponent() -> WakeAllRigidBodies();
 		PhysicsHandle -> ReleaseComponent();
