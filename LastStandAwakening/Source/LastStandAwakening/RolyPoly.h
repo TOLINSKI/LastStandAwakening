@@ -40,6 +40,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayStandUpSound();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlaySequence();
+
 private:
 	// =========================
 	bool bShouldAnimate = true;
@@ -77,6 +80,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USoundBase> StandUpSound;
+
+	UPROPERTY(EditAnywhere, Category = OtherActors, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AActor> DartStepsHead;
+
+	UPROPERTY(EditAnywhere, Category = OtherActors, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AActor> Weight;
 
 	// Functions:
 	//======================================================================

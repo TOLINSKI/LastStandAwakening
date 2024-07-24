@@ -28,8 +28,16 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+	// Called every frame ( Not using tick)
+	// virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
+	UFUNCTION()
+	void OnTargetBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor, 
+		UPrimitiveComponent* OtherComp, 
+		int32 OtherBodyIndex, 
+		bool bFromSweep, 
+		const FHitResult& SweepResult);
 
 private:
 
@@ -38,21 +46,14 @@ private:
 	UPROPERTY(EditAnywhere, Category = OtherActors, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AScales> Scales;
 
-
 	// Functions:
 	// =======================================
-	bool BallInTarget();
-
 	bool GameWinConditionMet();
-
-	bool PlayerIsOverlapping();
 
 	void SetGameWon();
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FString GameWinCondition;
-
-
 
 public:
 

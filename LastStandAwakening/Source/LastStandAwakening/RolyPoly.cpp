@@ -89,6 +89,7 @@ void ARolyPoly::StandUp()
 			StandUpSound,
 			BodyMesh->GetComponentLocation());
 		bStartShake = true;
+		PlaySequence();
 	}
 
 	if (bStartShake)
@@ -96,6 +97,10 @@ void ARolyPoly::StandUp()
 		Shaker->ShakeRoly(BodyMesh, bDoneShaking);
 		if (bDoneShaking)
 		{
+			if (DartStepsHead)
+			{
+				DartStepsHead->SetActorTickEnabled(true);
+			}
 			ShouldStandUp = false;
 		}
 	}
