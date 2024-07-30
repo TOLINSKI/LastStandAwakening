@@ -48,6 +48,7 @@ void ARolyPoly::BeginPlay()
 void ARolyPoly::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	if (bShouldAnimate) // bShouldAnimate needs to be set manually in RolyPoly.h
 	{
 		if (ShouldStandUp)

@@ -99,8 +99,8 @@ void AScales::UpdateScalesAngle()
 	{
 		if (Actor != this && !Actor->ActorHasTag(TEXT("Grabbed")))
 		{
-			UE_LOG(LogTemp, Display, TEXT("Scales Overlapping: %s"), *Actor->GetName());
-			if (Actor == Player)
+			Player = Cast<AProtagonist>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+			if (Player && Actor == Player)
 			{
 				AccumulateAngle += 25.f;
 				AccumulateAngle += GetWeight(Player->GetGrabbedActor());

@@ -48,6 +48,6 @@ public:
 
 	FORCEINLINE TObjectPtr<UCameraComponent> GetCamera() { return Camera; }
 
-	FORCEINLINE TObjectPtr<AActor> GetGrabbedActor();
+	TObjectPtr<AActor> GetGrabbedActor();
 	
 };

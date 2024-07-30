@@ -54,7 +54,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collision, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBoxComponent> LeftScaleCollisionBox;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = OtherActors, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, Category = OtherActors, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AProtagonist> Player;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = OtherActors, meta = (AllowPrivateAccess = "true"))

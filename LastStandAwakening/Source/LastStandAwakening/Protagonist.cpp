@@ -4,6 +4,9 @@
 #include "Protagonist.h"
 #include "Camera/CameraComponent.h"
 #include "Grabber.h"
+#include "GameFramework/CharacterMovementComponent.h"
+ 
+
 
 // Sets default values
 AProtagonist::AProtagonist()
@@ -21,7 +24,6 @@ void AProtagonist::BeginPlay()
 	Camera = Cast<UCameraComponent>(GetComponentByClass<UCameraComponent>());
 
 	Grabber = GetComponentByClass<UGrabber>();
-
 }
 
 // Called every frame
